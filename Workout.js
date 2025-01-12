@@ -1,16 +1,11 @@
-export class Workout {
+import { db } from './dbConnection';
 
-    constructor() {
-        this.exercises = [];
-    }
-
-    addToWorkout(exercise) {
-        this.exercises.push(exercise);
-    }
-
-    removeFromWorkout(exercise) {
-        this.exercises =
-            this.exercises.filter(ex => ex !== exercise);
-    }
-
+const createWorkout = username => {
+  return db('workouts').insert({ username });
 };
+
+const addExercise = (workoutId, exerciseName) => {
+  return db('workouts_exercises').insert({ workoutId, exerciseName });
+};
+
+export { createWorkout, addExercise };

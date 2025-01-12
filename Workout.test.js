@@ -1,14 +1,27 @@
-import { Workout } from "./Workout.js";
+import { db, closeConnection } from './dbConnection';
+import { addExercise, createWorkout } from './Workout';
 
-test("The addToWorkout function can add an exercise to the workout", () => {
-    const workout = new Workout();
-    workout.addToWorkout("squats");
-    expect(workout.exercises).toEqual(["squats"]);
+beforeEach(async () => {
+    await db("workouts_exercises").truncate();
+    await db("workouts").truncate();
 });
 
-test("The removeFromWorkout function can remove an exercise from the workout", () => {
-    const workout = new Workout();
-    workout.addToWorkout("squats");       
-    workout.removeFromWorkout("squats");
-    expect(workout.exercises).toEqual([]);
+afterAll(async () => await closeConnection());
+
+test('createWorkout creates a workout for a username', async () => {
+    await createWorkout('Heimo Tulo');
+    const result = await db.select('username').from('workouts');
+    expect(result).toEqual([{ username: 'Heimo Tulo' }]);
+});
+
+test("addExercise adds an exercise to the workout", async () => {
+    const username = "Heimo Tulo";
+    await createWorkout(username);
+    const { id: workoutId } = await db
+        .select()
+        .from("workouts")
+        .where({ username });
+    await addExercise(workoutId, "squats");
+    const result = await db.select("exerciseName").from("workouts_exercises");
+    expect(result).toEqual([{ workoutId, exerciseName: "squats" }]);
 });
