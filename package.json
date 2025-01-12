@@ -5,9 +5,15 @@
   "main": "Workout.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "jest": {
+    "transform": {}
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
 }
