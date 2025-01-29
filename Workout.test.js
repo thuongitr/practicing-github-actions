@@ -10,10 +10,37 @@ afterAll(async () => await closeConnection());
 
 describe("createWorkout", () => {
 
-    test('create a workout for a username', async () => {
+    test('create a workout for a valid username', async () => {
+        expect.hasAssertions();
         await createWorkout('Heimo Tulo');
         const result = await db.select('username').from('workouts');
         expect(result).toEqual([{ username: 'Heimo Tulo' }]);
+    });
+
+    test('create a workout for a missing username', async () => {
+        expect.hasAssertions();
+        try {
+            await createWorkout();
+        } catch(e) {
+            const result = await db.select('username').from('workouts');
+            expect(result).toEqual([]);
+        }
+    });
+
+    test('create a workout with invalid parameter value throws error', async () => {
+        expect(() => createWorkout("HT")).toThrow();
+        const result = await db.select('username').from('workouts');
+        expect(result).toEqual([]);    
+    });
+
+    test('create a workout for a too short username', async () => {
+        expect.assertions(1);
+        try {
+            await createWorkout('HT');
+        } catch(e) {
+            const result = await db.select('username').from('workouts');
+            expect(result).toEqual([]);
+        }
     });
 
 });
