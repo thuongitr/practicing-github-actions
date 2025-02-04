@@ -1,4 +1,5 @@
 import { db } from './dbConnection';
+import { logger } from './logger';
 
 const createWorkout = username => {
     if (typeof username !== 'string' || username.length < 4) {
@@ -8,7 +9,9 @@ const createWorkout = username => {
 };
 
 const addExercise = (workoutId, exerciseName) => {
-    return db('workouts_exercises').insert({ workoutId, exerciseName });
+    const result = db('workouts_exercises').insert({ workoutId, exerciseName });
+    logger.logInfo({ workoutId, exerciseName }, `Exercise ${exerciseName} added to workout ${workoutId}`);
+    return result;
 };
 
 export { createWorkout, addExercise };
