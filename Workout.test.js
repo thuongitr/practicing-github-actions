@@ -1,5 +1,7 @@
 import { db, closeConnection } from './dbConnection';
+import jest from 'jest-mock';
 import { addExercise, createWorkout } from './Workout';
+import { logger } from './logger';
 
 beforeEach(async () => {
     await db("workouts_exercises").truncate();
@@ -21,7 +23,7 @@ describe("createWorkout", () => {
         expect.hasAssertions();
         try {
             await createWorkout();
-        } catch(e) {
+        } catch (e) {
             const result = await db.select('username').from('workouts');
             expect(result).toEqual([]);
         }
@@ -30,14 +32,14 @@ describe("createWorkout", () => {
     test('create a workout with invalid parameter value throws error', async () => {
         expect(() => createWorkout("HT")).toThrow();
         const result = await db.select('username').from('workouts');
-        expect(result).toEqual([]);    
+        expect(result).toEqual([]);
     });
 
     test('create a workout for a too short username', async () => {
         expect.assertions(1);
         try {
             await createWorkout('HT');
-        } catch(e) {
+        } catch (e) {
             const result = await db.select('username').from('workouts');
             expect(result).toEqual([]);
         }
@@ -49,7 +51,7 @@ describe("addExercise", () => {
 
     async function getWorkoutId(username) {
         return await db
-            .select()
+            .select("id")
             .from("workouts")
             .where({ username });
     }
@@ -57,10 +59,13 @@ describe("addExercise", () => {
     test("add an exercise to the workout", async () => {
         const username = "Heimo Tulo";
         await createWorkout(username);
-        const { id: workoutId } = await getWorkoutId(username);
+        const workoutId = (await getWorkoutId(username))[0].id;
         await addExercise(workoutId, "squats");
-        const result = await db.select("exerciseName").from("workouts_exercises");
-        expect(result).toEqual([{ workoutId, exerciseName: "squats" }]);
+        const result = await db.select("workoutId", "exerciseName").from("workouts_exercises");
+        expect(result).toEqual([{
+            workoutId: workoutId,
+            exerciseName: "squats"
+        }]);
     });
 
 });
