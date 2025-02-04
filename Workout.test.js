@@ -68,4 +68,15 @@ describe("addExercise", () => {
         }]);
     });
 
+    test("log added exercise", () => {
+        expect.assertions(3);
+        jest.spyOn(logger, "logInfo");
+        addExercise(1, "squats");
+        const callArguments = logger.logInfo.mock.calls[0];
+        const [firstArgument, secocndArgument] = callArguments;
+        expect(logger.logInfo.mock.calls).toHaveLength(1);
+        expect(firstArgument).toEqual({ workoutId: 1, exerciseName: "squats" });
+        expect(secocndArgument).toEqual("Exercise squats added to workout 1"); 
+    });
+
 });
