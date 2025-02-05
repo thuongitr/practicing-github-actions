@@ -3,10 +3,14 @@ import jest from 'jest-mock';
 import { addExercise, createWorkout } from './Workout';
 import { logger } from './logger';
 
+beforeAll(() => jest.spyOn(logger, "logInfo").mockImplementation(jest.fn()));
+
 beforeEach(async () => {
     await db("workouts_exercises").truncate();
     await db("workouts").truncate();
 });
+
+afterEach(() => logger.logInfo.mockClear()); 
 
 afterAll(async () => await closeConnection());
 
@@ -70,7 +74,6 @@ describe("addExercise", () => {
 
     test("log added exercise", () => {
         expect.assertions(3);
-        jest.spyOn(logger, "logInfo");
         addExercise(1, "squats");
         const callArguments = logger.logInfo.mock.calls[0];
         const [firstArgument, secocndArgument] = callArguments;
