@@ -1,5 +1,5 @@
-import { db } from './dbConnection';
-import { logger } from './logger';
+import { db } from './dbConnection.js';
+import { logger } from './logger.js';
 
 const createWorkout = username => {
     if (typeof username !== 'string' || username.length < 4) {

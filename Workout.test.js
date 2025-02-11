@@ -1,7 +1,7 @@
-import { db, closeConnection } from './dbConnection';
+import { db, closeConnection } from './dbConnection.js';
 import jest from 'jest-mock';
-import { addExercise, createWorkout } from './Workout';
-import { logger } from './logger';
+import { addExercise, createWorkout } from './Workout.js';
+import { logger } from './logger.js';
 
 beforeAll(() => jest.spyOn(logger, "logInfo").mockImplementation(jest.fn()));
 
