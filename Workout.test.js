@@ -1,16 +1,8 @@
 import { db, closeConnection } from './dbConnection.js';
 import { jest } from '@jest/globals';
-import { addExercise, createWorkout, getWorkoutSuggestion } from './Workout.js';
+import { addExercise, createWorkout } from './Workout.js';
 import { logger } from './logger.js';
 
-jest.mock('./WorkoutService.js', () => ({
-    fetchWorkoutSuggestion: () => Promise.resolve({
-        workout: [
-            { id: 1, name: 'push-ups' },
-            { id: 2, name: 'squats' }
-        ]
-    })
-}));
 
 beforeAll(() => jest.spyOn(logger, "logInfo").mockImplementation(jest.fn()));
 
@@ -93,14 +85,3 @@ describe("addExercise", () => {
 
 });
 
-describe("getWorkoutSuggestion", () => {
-    test("fetch workout suggestion", async () => {
-        const workout = await getWorkoutSuggestion();
-        expect(workout).toEqual({
-            workout: [
-                { id: 1, name: 'push-ups' },
-                { id: 2, name: 'squats' }
-            ]
-        });
-    });
-});

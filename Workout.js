@@ -1,6 +1,5 @@
 import { db } from './dbConnection.js';
 import { logger } from './logger.js';
-import { fetchWorkoutSuggestion } from './WorkoutService.js';
 
 
 const createWorkout = username => {
@@ -16,8 +15,4 @@ const addExercise = (workoutId, exerciseName) => {
     return result;
 };
 
-const getWorkoutSuggestion = async () => {
-    return await fetchWorkoutSuggestion();
-};
-
-export { createWorkout, addExercise, getWorkoutSuggestion };
+export { createWorkout, addExercise };
